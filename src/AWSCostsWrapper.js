@@ -20,8 +20,10 @@ class AWSCostsWrapper extends React.Component {
 		if (error != null) {
 			alert("Failed to retrieve an object: " + error);
 		} else {
+			let parsed_data = Papa.parse(data.Body.toString(), {header: true, dynamicTyping: true, skipEmptyLines: true}).data
+			//currently (June 2020) Papa.parse().data is returning an extra item with null values. skipEmptyLines fixes the issue for now...
 			this.setState((state, props) => ({
-				data: Papa.parse(data.Body.toString(), {header: true, dynamicTyping: true}).data
+				data: parsed_data
 			}));
 		}
 	}

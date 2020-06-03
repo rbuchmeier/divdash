@@ -4,16 +4,17 @@ var d3AWSCosts = {};
 
 d3AWSCosts.create = (el, state) => {
 	const canvasHeight = 400;
-	const canvasWidth = 1000;
-	const scale = 20;
+	const canvasWidth = 500;
 	d3.select(el)
 	  .attr("width", canvasWidth)
 	  .attr("height", canvasHeight)
 }
 d3AWSCosts.update = (el, state) => {
 	const canvasHeight = 400;
-	const canvasWidth = 1000;
-	let months = state.map((d) => d["Month"]);
+	const canvasWidth = 500;
+	let parseDate = d3.utcParse('%Y-%m-%d');
+	let formatDate = d3.timeFormat('%b-%y');
+	let months = state.map((d) => formatDate(parseDate(d["Month"])));
 	let amounts = state.map((d) => d["Amount"]);
 	let svg_elem = d3.select(el);
 	let amount_scale = d3.scaleLinear()

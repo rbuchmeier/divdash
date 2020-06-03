@@ -9,7 +9,7 @@ d3PriceChart.create = (el, state) => {
 	d3.select(el)
 		.attr("width", canvasWidth)
 		.attr("height", canvasHeight)
-		.style("border", "1px solid black")
+		//.style("border", "1px solid black")
 }
 d3PriceChart.update = (el, state) => {
 	const canvasHeight = 400;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import d3PriceChart from './d3PriceChart';
 
 class PriceChart extends Component {

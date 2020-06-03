@@ -30,7 +30,7 @@ d3AWSCosts.update = (el, state) => {
 	svg_elem.selectAll("rect")
 			.data(amounts).enter()
 			.append("rect")
-			.attr("width", canvasWidth/months.length)
+			.attr("width", (canvasWidth-50)/months.length)
 			.attr("height", (datapoint) => amount_scale(datapoint))
 			.attr("fill", "orange")
 			.attr("x", (datapoint, iteration) => month_scale(months[iteration]))
@@ -46,7 +46,7 @@ d3AWSCosts.update = (el, state) => {
 			.data(months).enter()
 			.append("text")
 			.attr("class", "month")
-			.attr("x", (datapoint, iteration) => month_scale(months[iteration]))
+			.attr("x", (datapoint, iteration) => month_scale(datapoint))
 			.attr("y", (datapoint) => canvasHeight)
 			.text((d) => d);
 	svg_elem.append("g")

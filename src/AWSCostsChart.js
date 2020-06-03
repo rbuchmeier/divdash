@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import d3AWSCosts from './d3AWSCosts';
 
 class AWSCostsChart extends Component {

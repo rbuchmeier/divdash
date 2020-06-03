@@ -5,7 +5,6 @@ var d3PriceChart = {};
 d3PriceChart.create = (el, state) => {
 	const canvasHeight = 400
 	const canvasWidth = 3500
-	const scale = 20
 	d3.select(el)
 		.attr("width", canvasWidth)
 		.attr("height", canvasHeight)

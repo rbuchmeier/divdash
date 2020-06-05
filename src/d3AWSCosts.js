@@ -33,7 +33,7 @@ d3AWSCosts.update = (el, state) => {
 		let unbilled_days = (last_month_day - last_cost_date.getTime())/one_day;
 		estimated_unbilled_cost = unbilled_days/billed_days*last_cost;
 	} else {
-		console.log('foobar');
+		console.log('check this logic...should not have happened');
 	}
 	let scale_ref_amounts = [...amounts];
 	scale_ref_amounts[scale_ref_amounts.length - 1] = scale_ref_amounts[scale_ref_amounts.length - 1] + estimated_unbilled_cost;

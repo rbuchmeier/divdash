@@ -30,7 +30,6 @@ class BarChart extends Component {
 		this.drawBarChart(data)
 	}
 	componentDidUpdate() {
-		console.log(this.props.data);
 		if (this.props.data.length > 0) {
 			this.drawBarChart(this.props.data);
 		}

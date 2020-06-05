@@ -13,7 +13,6 @@ class PriceChart extends Component {
 	}
 	componentDidUpdate() {
 		if (this.props.data.length > 0) {
-			console.log("new data");
 			d3PriceChart.update(this.myRef.current, this.props.data);
 		}
 	}

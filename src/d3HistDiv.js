@@ -66,7 +66,6 @@ d3HistDiv.update = (el, state) => {
 	let month_scale = d3.scaleBand()
 	                    .domain(months)
 						.range([55,canvasWidth]);
-	console.log(amounts);
 	svg_elem.selectAll("rect")
 			.data(amounts).enter()
 			.append("rect")

@@ -5,6 +5,7 @@ import AWSCostsWrapper from './AWSCostsWrapper';
 import RMPBillWrapper from './RMPBillWrapper';
 import M1BorrowWrapper from './M1BorrowWrapper';
 import DOBillWrapper from './DOBillWrapper';
+import TechOverviewWrapper from './TechOverviewWrapper';
 
 class App extends React.Component {
 	render() {
@@ -13,7 +14,8 @@ class App extends React.Component {
 		// return ( <AWSCostsWrapper /> )
 		// return ( <RMPBillWrapper /> )
 		// return ( <M1BorrowWrapper /> )
-		return ( <DOBillWrapper /> )
+		// return ( <DOBillWrapper /> )
+		return ( <TechOverviewWrapper /> )
 	}
 }
 export default App

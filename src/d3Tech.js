@@ -25,7 +25,7 @@ function formatData(data) {
 function groupData(arr1, arr2) {
 	let new_array = [...arr1];
 	arr2.forEach((x) => {
-		let matching_months = [...new_array.filter(y => x["Date"] == y["Date"])];
+		let matching_months = [...new_array.filter(y => x["Date"] === y["Date"])];
 		if (matching_months.length === 0) {
 			new_array.push(Object.assign({}, x));
 		} else {
@@ -58,13 +58,7 @@ d3Tech.update = (el, state) => {
 	formatData(borrowData);
 	let data = groupData(doData, awsData);
 	data = groupData(data, borrowData);
-	let do_months = doData.map((d) => d["Date"]);
-	let aws_months = awsData.map((d) => d["Date"]);
-	let borrow_months = borrowData.map((d) => d["Date"]);
 	let months = data.map((d) => d["Date"]);
-	let do_amounts = doData.map((d) => -d["Amount"]);
-	let aws_amounts = awsData.map((d) => -d["Amount"]);
-	let borrow_amounts = borrowData.map((d) => -d["Amount"]);
 	let amounts = data.map((d) => -d["Amount"]);
 	let svg_elem = d3.select(el);
 	let amount_scale = d3.scaleLinear()

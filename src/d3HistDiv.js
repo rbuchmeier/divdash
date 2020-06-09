@@ -10,7 +10,7 @@ d3HistDiv.create = (el, state) => {
 	  .attr("height", canvasHeight)
 }
 function filter_dividends(all_activity) {
-	let money_movements = all_activity.filter((activity) => activity['Type'] == 'MONEY_MOVEMENTS');
+	let money_movements = all_activity.filter((activity) => activity['Type'] === 'MONEY_MOVEMENTS');
 	let stock_movements = money_movements.filter((movement) => movement['Symbol']);
 	return stock_movements;
 }
@@ -31,7 +31,7 @@ function format_amounts(bad_amount_divs) {
 	return bad_amount_divs.map((d) => Object.assign(d, {'Amount': Number(d['Amount'].split(' ').pop())}));
 }
 function get_index_of_month(semi_grouped_divs, key_div) {
-	return semi_grouped_divs.findIndex((d) => d['Date'] == key_div['Date']);
+	return semi_grouped_divs.findIndex((d) => d['Date'] === key_div['Date']);
 }
 function group_divs(ungrouped_divs) {
 	let grouped_divs = [...ungrouped_divs];

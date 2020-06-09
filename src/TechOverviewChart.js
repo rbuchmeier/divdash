@@ -11,7 +11,9 @@ class TechOverviewChart extends Component {
 		d3Tech.create(this.myRef.current, this.props.data);
 	}
 	componentDidUpdate() {
-		if (this.props.data.digitalocean.data.length > 0 && this.props.data.aws.data.length > 0) {
+		if (this.props.data.digitalocean.data.length > 0 &&
+			this.props.data.aws.data.length > 0 &&
+			this.props.data.borrow.data.length > 0 ) {
 			d3Tech.update(this.myRef.current, this.props.data);
 		}
 	}

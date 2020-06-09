@@ -24,6 +24,11 @@ class TechOverviewWrapper extends React.Component {
 				type: "expense",
 				filename: "costs.csv",
 				data: []
+			},
+			borrow: {
+				type: "expense",
+				filename: "activity-export-5QM34557.csv",
+				data: []
 			}
 		};
 	}
@@ -44,6 +49,11 @@ class TechOverviewWrapper extends React.Component {
 						type: "expense",
 						filename: "costs.csv",
 						data: stateKey === "aws" ? parsed_data : this.state.aws.data
+					},
+					borrow: {
+						type: "expense",
+						filename: "activity-export-5QM34557.csv",
+						data: stateKey === "borrow" ? parsed_data : this.state.borrow.data
 					}
 				}));
 			}

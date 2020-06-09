@@ -42,20 +42,18 @@ d3Tech.update = (el, state) => {
 	formatData(doData);
 	formatData(awsData);
 	let data = groupData(doData, awsData);
-	console.log(data);
 	let do_months = doData.map((d) => d["Date"]);
 	let aws_months = awsData.map((d) => d["Date"]);
 	let months = Array.from(new Set([...do_months,...aws_months]));
-	let do_amounts = doData.map((d) => d["Amount"]);
-	let aws_amounts = awsData.map((d) => d["Amount"]);
-	let scale_amounts = do_amounts.concat(aws_amounts);
+	let do_amounts = doData.map((d) => -d["Amount"]);
+	let aws_amounts = awsData.map((d) => -d["Amount"]);
 	let svg_elem = d3.select(el);
 	let amount_scale = d3.scaleLinear()
-				  		 .domain([0, d3.max(do_amounts)])
-						 .range([0, canvasHeight - 25]);
+				  		 .domain([d3.min(do_amounts), 0])
+						 .range([canvasHeight - 25, 0]);
 	let y_scale = d3.scaleLinear()
-					.domain([0, d3.max(do_amounts)])
-					.range([canvasHeight - 25, 0]);
+					.domain([0, d3.min(do_amounts)])
+					.range([0, canvasHeight - 25]);
 	let y_axis = d3.axisLeft().scale(y_scale);
 	let month_scale = d3.scaleBand()
 	                    .domain(months)
@@ -67,13 +65,13 @@ d3Tech.update = (el, state) => {
 			.attr("height", (datapoint) => amount_scale(datapoint))
 			.attr("fill", "orange")
 			.attr("x", (datapoint, iteration) => month_scale(months[iteration]))
-			.attr("y", (datapoint) => canvasHeight - amount_scale(datapoint) - 15);
+			.attr("y", (datapoint) => 10);
 	svg_elem.selectAll(".amount")
 			.data(do_amounts).enter()
 			.append("text")
 			.attr("class", "amount")
 			.attr("x", (datapoint, iteration) => month_scale(months[iteration]))
-			.attr("y", (datapoint) => canvasHeight - amount_scale(datapoint) - 15)
+			.attr("y", (datapoint) => amount_scale(datapoint))
 			.text((d) => d3.format("$.2f")(d));
 	svg_elem.selectAll(".month")
 			.data(months).enter()

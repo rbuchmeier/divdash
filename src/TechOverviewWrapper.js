@@ -38,12 +38,12 @@ class TechOverviewWrapper extends React.Component {
 					digitalocean: {
 						type: "expense",
 						filename: "digitalocean.csv",
-						data: stateKey === "digitalocean" ? parsed_data : []
+						data: stateKey === "digitalocean" ? parsed_data : this.state.digitalocean.data
 					},
 					aws: {
 						type: "expense",
 						filename: "costs.csv",
-						data: stateKey === "aws" ? parsed_data : []
+						data: stateKey === "aws" ? parsed_data : this.state.aws.data
 					}
 				}));
 			}

@@ -14,7 +14,7 @@ d3AWSCosts.update = (el, state) => {
 	const canvasWidth = 500;
 	let parseDate = d3.timeParse('%Y-%m-%d');
 	let formatDate = d3.timeFormat('%b-%y');
-	let months = state.map((d) => formatDate(parseDate(d["Month"])));
+	let months = state.map((d) => formatDate(parseDate(d["Date"])));
 	let ends = state.map((d) => parseDate(d["End"]));
 	let amounts = state.map((d) => d["Amount"]);
 	let svg_elem = d3.select(el);
@@ -22,7 +22,7 @@ d3AWSCosts.update = (el, state) => {
 	let first_month_day = new Date();
 	let last_month_day = new Date();
 	let estimated_unbilled_cost = 0;
-	if (formatDate(parseDate(months[months.length-1]['Month']))===formatDate(parseDate(months[months.length-1]['End']))) {
+	if (formatDate(parseDate(months[months.length-1]['Date']))===formatDate(parseDate(months[months.length-1]['End']))) {
 		let last_cost = amounts[amounts.length-1]
 		last_cost_date = ends[ends.length-1];
 		first_month_day = new Date(last_cost_date.getFullYear(), last_cost_date.getMonth(), 1);

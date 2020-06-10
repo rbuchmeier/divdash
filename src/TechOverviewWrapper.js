@@ -1,6 +1,7 @@
 import React from 'react';
 import secrets from './secrets';
 import TechOverviewChart from './TechOverviewChart';
+const cloneDeep = require('lodash.clonedeep');
 var Papa = require('papaparse');
 var AWS = require('aws-sdk');
 AWS.config.update(
@@ -43,17 +44,17 @@ class TechOverviewWrapper extends React.Component {
 					digitalocean: {
 						type: "expense",
 						filename: "digitalocean.csv",
-						data: stateKey === "digitalocean" ? parsed_data : this.state.digitalocean.data
+						data: stateKey === "digitalocean" ? cloneDeep(parsed_data) : this.state.digitalocean.data
 					},
 					aws: {
 						type: "expense",
 						filename: "costs.csv",
-						data: stateKey === "aws" ? parsed_data : this.state.aws.data
+						data: stateKey === "aws" ? cloneDeep(parsed_data) : this.state.aws.data
 					},
 					borrow: {
 						type: "expense",
 						filename: "activity-export-5QM34557.csv",
-						data: stateKey === "borrow" ? parsed_data : this.state.borrow.data
+						data: stateKey === "borrow" ? cloneDeep(parsed_data) : this.state.borrow.data
 					}
 				}));
 			}

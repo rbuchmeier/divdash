@@ -19,7 +19,7 @@ function dateParse(date) {
 function formatData(data) {
 	data.forEach((d) => {
 		d["Date"] = dateParse(d["Date"])
-		d["Amount"] = typeof d["Amount"] === 'string' ? -1 * Number(d["Amount"].split(" ").pop()) : d["Amount"]
+		d["Amount"] = typeof d["Amount"] === 'string' ? -1 * Number(d["Amount"].split(" ").pop()) : -1 * d["Amount"]
 	});
 }
 
@@ -92,6 +92,16 @@ function simplify_borrow(bills) {
 	return simplified_bills;
 }
 
+function getCumulative(net_data) {
+	let cumulative = cloneDeep(net_data);
+	return cumulative.map(
+		(d, i, arr) =>
+		d["Amount"] + arr.slice(0, i).reduce(
+			(a, b) =>
+			a + b["Amount"]
+		, 0)
+	);
+}
 
 d3Tech.update = (el, state) => {
 	const canvasHeight = 400;
@@ -112,23 +122,24 @@ d3Tech.update = (el, state) => {
 	let expenses = groupData(doData, awsData);
 	expenses = groupData(expenses, borrowData);
 	let all_data = groupData(expenses, dividends);
+	let cumulative = getCumulative(all_data);
 	let months = expenses.map((d) => d["Date"]);
 	let income_months = dividends.map((d) => d["Date"]);
-	let amounts = expenses.map((d) => -d["Amount"]);
-	let do_amounts = doData.map((d) => -d["Amount"]);
+	let amounts = expenses.map((d) => d["Amount"]);
+	let do_amounts = doData.map((d) => d["Amount"]);
 	let do_months = doData.map((d) => d["Date"]);
-	let aws_amounts = awsData.map((d) => -d["Amount"]);
+	let aws_amounts = awsData.map((d) => d["Amount"]);
 	let aws_months = awsData.map((d) => d["Date"]);
 	let income = dividends.map(d => d["Amount"]);
 	let svg_elem = d3.select(el);
 	let y_scale = d3.scaleLinear()
-					.domain([d3.max(income), d3.min(amounts)])
+					.domain([d3.max([d3.max(cumulative), d3.max(income)]), d3.min([d3.min(cumulative), d3.min(amounts)])])
 					.range([0, canvasHeight - 25]);
 	let amount_scale = d3.scaleLinear()
-				  		 .domain([d3.min(amounts), 0])
+				  		 .domain([d3.min([d3.min(cumulative), d3.min(amounts)]), 0])
 						 .range([canvasHeight - y_scale(0) - 20, 0]);
 	let income_scale = d3.scaleLinear()
-				  		 .domain([0, d3.max(income)])
+				  		 .domain([0, d3.max([d3.max(cumulative), d3.max(income)])])
 						 .range([0, y_scale(0)-20]);
 	let y_axis = d3.axisLeft().scale(y_scale);
 	let month_scale = d3.scaleBand()
@@ -136,7 +147,6 @@ d3Tech.update = (el, state) => {
 						.range([55,canvasWidth]);
 	let getDOHeight = (month => {
 		let foo = amount_scale(do_amounts[do_months.findIndex(m => m === month)]);
-		console.log(foo);
 		return foo;
 	});
 	svg_elem.selectAll(".dodata")
@@ -187,6 +197,14 @@ d3Tech.update = (el, state) => {
 			.attr("x", (datapoint, iteration) => month_scale(datapoint))
 			.attr("y", (datapoint) => canvasHeight)
 			.text((d) => d);
+	svg_elem.append("path")
+			.datum(cumulative)
+			.attr("fill", "none")
+			.attr("stroke", "steelblue")
+			.attr("stroke-width", 1.5)
+			.attr("d", d3.line()
+						 .x((d, i) => month_scale(months[i]) + (canvasWidth-50)/months.length/2 - 5)
+						 .y(d => y_scale(0) - income_scale(d) + 15));
 	svg_elem.append("g")
 	        .attr("transform", "translate(50, 10)")
 	        .call(y_axis);

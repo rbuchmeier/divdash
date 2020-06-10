@@ -115,6 +115,10 @@ d3Tech.update = (el, state) => {
 	let months = expenses.map((d) => d["Date"]);
 	let income_months = dividends.map((d) => d["Date"]);
 	let amounts = expenses.map((d) => -d["Amount"]);
+	let do_amounts = doData.map((d) => -d["Amount"]);
+	let do_months = doData.map((d) => d["Date"]);
+	let aws_amounts = awsData.map((d) => -d["Amount"]);
+	let aws_months = awsData.map((d) => d["Date"]);
 	let income = dividends.map(d => d["Amount"]);
 	let svg_elem = d3.select(el);
 	let y_scale = d3.scaleLinear()
@@ -130,15 +134,29 @@ d3Tech.update = (el, state) => {
 	let month_scale = d3.scaleBand()
 	                    .domain(months)
 						.range([55,canvasWidth]);
-	svg_elem.selectAll(".expense")
-			.data(amounts).enter()
+	let getDOHeight = (month => {
+		let foo = amount_scale(do_amounts[do_months.findIndex(m => m === month)]);
+		console.log(foo);
+		return foo;
+	});
+	svg_elem.selectAll(".dodata")
+			.data(do_amounts).enter()
 			.append("rect")
-			.attr("class", "expense")
+			.attr("class", "dodata")
 			.attr("width", (canvasWidth-50)/months.length - 5)
 			.attr("height", (datapoint) => amount_scale(datapoint))
 			.attr("fill", "orange")
-			.attr("x", (datapoint, iteration) => month_scale(months[iteration]))
+			.attr("x", (datapoint, iteration) => month_scale(do_months[iteration]))
 			.attr("y", (datapoint) => y_scale(0) + 10);
+	svg_elem.selectAll(".awsdata")
+			.data(aws_amounts).enter()
+			.append("rect")
+			.attr("class", "awsdata")
+			.attr("width", (canvasWidth-50)/months.length - 5)
+			.attr("height", (datapoint) => amount_scale(datapoint))
+			.attr("fill", "darkseagreen")
+			.attr("x", (datapoint, iteration) => month_scale(aws_months[iteration]))
+			.attr("y", (datapoint, iteration) => y_scale(0) + getDOHeight(aws_months[iteration]) + 10);
 	svg_elem.selectAll(".income")
 			.data(income).enter()
 			.append("rect")

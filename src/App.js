@@ -6,6 +6,7 @@ import RMPBillWrapper from './RMPBillWrapper';
 import M1BorrowWrapper from './M1BorrowWrapper';
 import DOBillWrapper from './DOBillWrapper';
 import TechOverviewWrapper from './TechOverviewWrapper';
+import TechOverviewUI from './TechOverviewUI';
 
 class App extends React.Component {
 	render() {
@@ -15,7 +16,8 @@ class App extends React.Component {
 		// return ( <RMPBillWrapper /> )
 		// return ( <M1BorrowWrapper /> )
 		// return ( <DOBillWrapper /> )
-		return ( <TechOverviewWrapper /> )
+		// return ( <TechOverviewWrapper /> )
+		return ( <TechOverviewUI /> )
 	}
 }
 export default App

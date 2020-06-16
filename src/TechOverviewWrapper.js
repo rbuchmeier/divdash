@@ -1,6 +1,7 @@
 import React from 'react';
 import secrets from './secrets';
 import TechOverviewChart from './TechOverviewChart';
+import styles from './styles.module.css';
 const cloneDeep = require('lodash.clonedeep');
 var Papa = require('papaparse');
 var AWS = require('aws-sdk');
@@ -73,7 +74,9 @@ class TechOverviewWrapper extends React.Component {
 	}
 	render () {
 		return (
-			<TechOverviewChart data={this.state} />
+			<div className={styles.card}>
+				<TechOverviewChart data={this.state} />
+			</div>
 		)
 	}
 }

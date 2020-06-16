@@ -60,7 +60,7 @@ function format_dates(bad_date_divs) {
 }
 
 function format_amounts(bad_amount_divs) {
-	return bad_amount_divs.map((d) => Object.assign(d, {'Amount': Number(d['Amount'].split(' ').pop())}));
+	return bad_amount_divs.map((d) => Object.assign(d, {'Amount': Number(d['Amount'].replace('(','-').replace(')','').replace('$','').replace(' ',''))}));
 }
 
 function get_index_of_month(semi_grouped_divs, key_div) {

@@ -1,4 +1,6 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+
 import DataAWS from './DataAWS';
 import ActivityAWS from './ActivityAWS';
 import AWSCostsWrapper from './AWSCostsWrapper';
@@ -9,6 +11,7 @@ import TechOverviewWrapper from './TechOverviewWrapper';
 import TechOverviewUI from './TechOverviewUI';
 import UtilitiesOverviewUI from './UtilitiesOverviewUI';
 
+
 class App extends React.Component {
 	render() {
 		// return ( <DataAWS /> )
@@ -18,10 +21,21 @@ class App extends React.Component {
 		// return ( <M1BorrowWrapper /> )
 		// return ( <DOBillWrapper /> )
 		return ( 
-			<div>
-				<TechOverviewUI />
-				<UtilitiesOverviewUI />
-			</div>
+		    <Router>
+			    <div>
+				    <Switch>
+					    <Route exact path='/'>
+							<h1>FooBar</h1>
+					    </Route>
+					    <Route path='/technology'>
+				            <TechOverviewUI />
+					    </Route>
+					    <Route path='/utilities'>
+				            <UtilitiesOverviewUI />
+					    </Route>
+				    </Switch>
+			    </div>
+		    </Router>
 		)
 	}
 }

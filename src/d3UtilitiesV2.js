@@ -5,11 +5,6 @@ const union = require('lodash/union');
 var d3Utilities = {};
 
 d3Utilities.create = (el, state) => {
-	const canvasHeight = 400;
-	const canvasWidth = 3000;
-	d3.select(el)
-	  .attr("width", canvasWidth)
-	  .attr("height", canvasHeight);
     d3Utilities.update(el); // Remove before Prod TODO
 }
 
@@ -113,7 +108,10 @@ function sortMonths(months) {
 
 d3Utilities.update = (el) => {
 	const canvasHeight = 400;
-	const canvasWidth = 3000;
+	const canvasWidth = 2000;
+	d3.select(el)
+	  .attr("width", canvasWidth)
+	  .attr("height", canvasHeight);
 	const xLabelMargin = 20;
 	const sketchHeight = canvasHeight - xLabelMargin;
 	let svg_elem = d3.select(el);

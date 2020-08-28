@@ -10,6 +10,7 @@ import DOBillWrapper from './DOBillWrapper';
 import TechOverviewWrapper from './TechOverviewWrapper';
 import TechOverviewUI from './TechOverviewUI';
 import UtilitiesOverviewUI from './UtilitiesOverviewUI';
+import UtilitiesV2 from './UtilitiesOverviewV2';
 
 
 class App extends React.Component {
@@ -32,6 +33,9 @@ class App extends React.Component {
 					    </Route>
 					    <Route path='/utilities'>
 				            <UtilitiesOverviewUI />
+					    </Route>
+					    <Route path='/utilitiesv2'>
+				            <UtilitiesV2 />
 					    </Route>
 				    </Switch>
 			    </div>

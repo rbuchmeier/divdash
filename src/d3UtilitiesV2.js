@@ -4,8 +4,8 @@ const union = require('lodash/union');
 
 var d3Utilities = {};
 
-d3Utilities.create = (el, state) => {
-    d3Utilities.update(el); // Remove before Prod TODO
+d3Utilities.create = (el, dataRequested) => {
+    d3Utilities.update(el, dataRequested); // Remove before Prod TODO
 }
 
 function filter_borrow(all_activity) {
@@ -106,27 +106,53 @@ function sortMonths(months) {
 	return dateMonths;
 }
 
-d3Utilities.update = (el) => {
+function updateExpenses(svge, dataRequested, yScale, barWidth, month_scale, sketchHeight) {
+	let borrow = JSON.parse(localStorage.getItem('borrow'));
+	borrow = clean_borrow_data(borrow);
+	let borrow_months = getDates(borrow);
+	let borrow_amounts = getAmounts(borrow);
+	let borrow_scale = d3.scaleLinear()
+						.domain([0, d3.max(borrow_amounts)])
+						.range([0, yScale(0)]);
+	if (dataRequested['borrow']) {
+		svge.selectAll('.borrow')
+			.data(borrow).enter()
+			.append('rect')
+			.attr('class', 'borrow')
+			.attr('width', barWidth)
+			.attr('height', (datapoint) => borrow_scale(datapoint['Amount']))
+			.attr('fill', 'blue')
+			.attr('x', (datapoint, iteration) => month_scale(borrow_months[iteration]))
+			.attr('y', (datapoint) => sketchHeight - yScale(0) );
+	} else {
+		svge.selectAll('.borrow')
+				.remove();
+	}
+}
+
+function getLargestExpense() {
+	let borrow = JSON.parse(localStorage.getItem('borrow'));
+	borrow = clean_borrow_data(borrow);
+	return d3.max(getAmounts(borrow));
+}
+
+d3Utilities.update = (el, dataRequested) => {
 	const canvasHeight = 400;
-	const canvasWidth = 2000;
+	const canvasWidth = 1000;
 	d3.select(el)
 	  .attr("width", canvasWidth)
 	  .attr("height", canvasHeight);
 	const xLabelMargin = 20;
 	const sketchHeight = canvasHeight - xLabelMargin;
 	let svg_elem = d3.select(el);
-	let borrowData = JSON.parse(localStorage.getItem('borrow'));
-	borrowData = clean_borrow_data(borrowData);
 	let divData = JSON.parse(localStorage.getItem('borrow'));
 	divData = clean_div_data(divData);
 	divData = divData.map((d) => Object.assign(d, {'Amount': d['Amount']}));
-	let borrow_months = getDates(borrowData);
 	let div_months = getDates(divData);
-	let borrow_amounts = getAmounts(borrowData);
 	let div_amounts = getAmounts(divData);
-	let all_months = mergeArrays(borrow_months, div_months);
+	let all_months = div_months;
 	all_months = sortMonths(all_months);
-	let largest_month_expense = d3.max(borrow_amounts);
+	let largest_month_expense = getLargestExpense();
 	let largest_month_income = d3.max(div_amounts);
 	let month_scale = d3.scaleBand()
 						.domain(all_months)
@@ -134,26 +160,15 @@ d3Utilities.update = (el) => {
 	let y_scale = d3.scaleLinear()
 					.domain([-1 * largest_month_expense, largest_month_income])
 					.range([0, sketchHeight]);
-	let borrow_scale = d3.scaleLinear()
-						    .domain([0, d3.max(borrow_amounts)])
-						    .range([0, y_scale(0)]);
 	let div_scale = d3.scaleLinear()
 						    .domain([0, d3.max(div_amounts)])
 						    .range([0, sketchHeight - y_scale(0)]);
-	svg_elem.selectAll('.borrow')
-			.data(borrowData).enter()
-			.append('rect')
-			.attr('class', 'borrow')
-			.attr('width', (canvasWidth-50)/all_months.length - 5)
-			.attr('height', (datapoint) => borrow_scale(datapoint['Amount']))
-			.attr('fill', 'blue')
-			.attr('x', (datapoint, iteration) => month_scale(borrow_months[iteration]))
-			.attr('y', (datapoint) => sketchHeight - y_scale(0) );
+							let barWidth = (canvasWidth-50)/all_months.length - 5;
 	svg_elem.selectAll('.income')
 			.data(divData).enter()
 			.append('rect')
 			.attr('class', 'income')
-			.attr('width', (canvasWidth-50)/all_months.length - 5)
+			.attr('width', barWidth)
 			.attr('height', (datapoint) => div_scale(datapoint['Amount']))
 			.attr('fill', 'green')
 			.attr('x', (datapoint, iteration) => month_scale(div_months[iteration]))
@@ -165,6 +180,7 @@ d3Utilities.update = (el) => {
 			.attr("x", (datapoint, iteration) => month_scale(datapoint))
 			.attr("y", (datapoint) => canvasHeight-5)
 			.text((d) => d);
+	updateExpenses(svg_elem, dataRequested, y_scale, barWidth, month_scale, sketchHeight);
 };
 
 export {d3Utilities as d3Chart};

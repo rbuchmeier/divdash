@@ -7,10 +7,10 @@ class UtilitiesOverviewChart extends Component {
 		this.myRef = React.createRef();
 	}
 	componentDidMount() {
-		d3Chart.create(this.myRef.current);
+		d3Chart.create(this.myRef.current, this.props.dataRequested);
 	}
 	componentDidUpdate() {
-		d3Chart.update(this.myRef.current);
+		d3Chart.update(this.myRef.current, this.props.dataRequested);
 	}
 	render() { return <svg ref={this.myRef}></svg> }
 }

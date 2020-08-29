@@ -4,7 +4,7 @@ import secrets from './secrets';
 import UtilitiesChartV2 from './UtilitiesChartV2';
 import styles from './styles.module.css';
 
-const OPTIONS = ["rmp", "propane", "borrow", "foo"];
+const OPTIONS = ["rmp", "propane", "borrow"];
 const FILENAMES = {
 	"rmp": "rmp_bills.csv",
 	"propane": "propane.csv",
@@ -29,7 +29,7 @@ class UtilitiesOverviewV2 extends React.Component {
 			checkboxes: OPTIONS.reduce(
 				(options, option) => ({
 					...options,
-					[option]: false
+					[option]: true
 				}),
 				{}
 			)
@@ -98,7 +98,7 @@ class UtilitiesOverviewV2 extends React.Component {
 						Refresh
 					</button>
 				</div>
-				<UtilitiesChartV2 />
+				<UtilitiesChartV2 dataRequested={this.state.checkboxes}/>
 			</div>
 		)
 	}

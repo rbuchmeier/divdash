@@ -123,11 +123,33 @@ function updateExpenses(svge, dataRequested, yScale, barWidth, month_scale, sket
 			.attr('height', (datapoint) => borrow_scale(datapoint['Amount']))
 			.attr('fill', 'blue')
 			.attr('x', (datapoint, iteration) => month_scale(borrow_months[iteration]))
-			.attr('y', (datapoint) => sketchHeight - yScale(0) );
+			.attr('y', (datapoint) => sketchHeight - yScale(0) )
+			.on('mouseover', () => tooltip.style("display", null))
+			.on('mouseout', () => tooltip.style("display", "none"))
+			.on("mousemove", function(d) {
+				let xPosition = d3.mouse(this)[0] - 15;
+				let yPosition = d3.mouse(this)[1] - 25;
+				tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+				tooltip.select("text").text(d3.format("$.2f")(d['Amount']));
+			});
 	} else {
 		svge.selectAll('.borrow')
 				.remove();
 	}
+	let tooltip = svge.append("g")
+					.attr("class", "tooltip")
+					.style("display", "none");
+	tooltip.append("rect")
+			.attr("width", 30)
+			.attr("height", 20)
+			.attr("fill", "white")
+			.style("opacity", 0.5);
+	tooltip.append("text")
+			.attr("x", 15)
+			.attr("dy", "1.2em")
+			.style("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.attr("font-weight", "bold");
 }
 
 function getLargestExpense() {
@@ -163,7 +185,7 @@ d3Utilities.update = (el, dataRequested) => {
 	let div_scale = d3.scaleLinear()
 						    .domain([0, d3.max(div_amounts)])
 						    .range([0, sketchHeight - y_scale(0)]);
-							let barWidth = (canvasWidth-50)/all_months.length - 5;
+	let barWidth = (canvasWidth-50)/all_months.length - 5;
 	svg_elem.selectAll('.income')
 			.data(divData).enter()
 			.append('rect')
@@ -172,7 +194,15 @@ d3Utilities.update = (el, dataRequested) => {
 			.attr('height', (datapoint) => div_scale(datapoint['Amount']))
 			.attr('fill', 'green')
 			.attr('x', (datapoint, iteration) => month_scale(div_months[iteration]))
-			.attr('y', (datapoint) => sketchHeight - y_scale(0) - div_scale(datapoint['Amount']));
+			.attr('y', (datapoint) => sketchHeight - y_scale(0) - div_scale(datapoint['Amount']))
+			.on('mouseover', () => tooltip.style("display", null))
+			.on('mouseout', () => tooltip.style("display", "none"))
+			.on("mousemove", function(d) {
+				let xPosition = d3.mouse(this)[0] - 15;
+				let yPosition = d3.mouse(this)[1] - 25;
+				tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+				tooltip.select("text").text(d3.format("$.2f")(d['Amount']));
+			})
 	svg_elem.selectAll(".month")
 			.data(all_months).enter()
 			.append("text")
@@ -180,7 +210,23 @@ d3Utilities.update = (el, dataRequested) => {
 			.attr("x", (datapoint, iteration) => month_scale(datapoint))
 			.attr("y", (datapoint) => canvasHeight-5)
 			.text((d) => d);
+	// Prep the tooltip bits, initial display is hidden
+	let tooltip = svg_elem.append("g")
+					.attr("class", "tooltip")
+					.style("display", "none");
+	tooltip.append("rect")
+			.attr("width", 30)
+			.attr("height", 20)
+			.attr("fill", "white")
+			.style("opacity", 0.5);
+	tooltip.append("text")
+			.attr("x", 15)
+			.attr("dy", "1.2em")
+			.style("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.attr("font-weight", "bold");
 	updateExpenses(svg_elem, dataRequested, y_scale, barWidth, month_scale, sketchHeight);
 };
 
 export {d3Utilities as d3Chart};
+

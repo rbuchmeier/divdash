@@ -29,9 +29,37 @@ function getCumulativeFromIncome(exp, inc) {
 	return reduceOngoingData(cumulative);
 }
 
+
+function combineExpenses(...expenses) {
+	let finalResult = [{'Date': ''}]; // Remove at end of function
+	let type = '';
+	let data = [];
+	let existingMonthIndex = -1;
+	expenses.forEach((expense) => {
+		type = expense['type'];
+		data = expense['data'];
+		data.map((d) => {
+			existingMonthIndex = -1;
+			finalResult.map((e, i) => {
+				if (e['Month'] === d['Date']) {
+					existingMonthIndex = i;
+				}
+			})
+			if (existingMonthIndex >= 0) {
+				finalResult[existingMonthIndex]['Expenses'][type] = d['Amount'];
+			} else {
+				finalResult = [...finalResult, Object.assign({}, {'Month': d['Date'], 'Expenses': Object.assign({}, {[type]: d['Amount']})})]
+			}
+		})
+	});
+	finalResult.shift();
+	return finalResult;
+}
+
 module.exports = {
 	mergeExpensesIntoIncome: mergeExpensesIntoIncome,
 	reduceOngoingData: reduceOngoingData,
+	combineExpenses: combineExpenses,
 	getCumulativeFromIncome: getCumulativeFromIncome
 };
 

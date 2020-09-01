@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 const cloneDeep = require('lodash.clonedeep');
 const union = require('lodash/union');
+const { combineExpenses, reduceOngoingData, getCumulativeFromIncome } = require('./data_utils');
 
 var d3Utilities = {};
 
@@ -134,7 +135,7 @@ function updateExpenses(svge, dataRequested, yScale, barWidth, month_scale, sket
 			});
 	} else {
 		svge.selectAll('.borrow')
-				.remove();
+			.remove();
 	}
 	let tooltip = svge.append("g")
 					.attr("class", "tooltip")
@@ -155,7 +156,15 @@ function updateExpenses(svge, dataRequested, yScale, barWidth, month_scale, sket
 function getLargestExpense() {
 	let borrow = JSON.parse(localStorage.getItem('borrow'));
 	borrow = clean_borrow_data(borrow);
-	return d3.max(getAmounts(borrow));
+	let expenses = combineExpenses({'type': 'borrow', 'data': borrow});
+	let largestExpense = 0;
+	let currentExpense = 0;
+	expenses.map((e) => {
+		currentExpense = Object.values(e['Expenses']).reduce((a, b) => a + b);
+		largestExpense = (currentExpense > largestExpense ? currentExpense : largestExpense);
+	});
+	console.log(largestExpense);
+	return largestExpense;
 }
 
 d3Utilities.update = (el, dataRequested) => {
@@ -170,14 +179,13 @@ d3Utilities.update = (el, dataRequested) => {
 	let divData = JSON.parse(localStorage.getItem('borrow'));
 	divData = clean_div_data(divData);
 	divData = divData.map((d) => Object.assign(d, {'Amount': d['Amount']}));
-	let div_months = getDates(divData);
+	let income_months = getDates(divData);
 	let div_amounts = getAmounts(divData);
-	let all_months = div_months;
-	all_months = sortMonths(all_months);
+	income_months = sortMonths(income_months);
 	let largest_month_expense = getLargestExpense();
 	let largest_month_income = d3.max(div_amounts);
 	let month_scale = d3.scaleBand()
-						.domain(all_months)
+						.domain(income_months)
 						.range([55,canvasWidth]);
 	let y_scale = d3.scaleLinear()
 					.domain([-1 * largest_month_expense, largest_month_income])
@@ -185,7 +193,7 @@ d3Utilities.update = (el, dataRequested) => {
 	let div_scale = d3.scaleLinear()
 						    .domain([0, d3.max(div_amounts)])
 						    .range([0, sketchHeight - y_scale(0)]);
-	let barWidth = (canvasWidth-50)/all_months.length - 5;
+	let barWidth = (canvasWidth-50)/income_months.length - 5;
 	svg_elem.selectAll('.income')
 			.data(divData).enter()
 			.append('rect')
@@ -193,7 +201,7 @@ d3Utilities.update = (el, dataRequested) => {
 			.attr('width', barWidth)
 			.attr('height', (datapoint) => div_scale(datapoint['Amount']))
 			.attr('fill', 'green')
-			.attr('x', (datapoint, iteration) => month_scale(div_months[iteration]))
+			.attr('x', (datapoint, iteration) => month_scale(income_months[iteration]))
 			.attr('y', (datapoint) => sketchHeight - y_scale(0) - div_scale(datapoint['Amount']))
 			.on('mouseover', () => tooltip.style("display", null))
 			.on('mouseout', () => tooltip.style("display", "none"))
@@ -204,7 +212,7 @@ d3Utilities.update = (el, dataRequested) => {
 				tooltip.select("text").text(d3.format("$.2f")(d['Amount']));
 			})
 	svg_elem.selectAll(".month")
-			.data(all_months).enter()
+			.data(income_months).enter()
 			.append("text")
 			.attr("class", "month")
 			.attr("x", (datapoint, iteration) => month_scale(datapoint))

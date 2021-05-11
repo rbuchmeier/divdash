@@ -7,7 +7,7 @@
     "@testing-library/user-event": "^7.1.2",
     "aws-sdk": "^2.686.0",
     "d3": "^5.16.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
     "lodash.union": "^4.6.0",
     "papaparse": "^5.2.0",
